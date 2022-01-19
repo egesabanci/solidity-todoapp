@@ -1,3 +1,7 @@
+require("dotenv").config()
+const mnemonic = process.env.MNEMONIC
+const infuraUrl = process.env.INFURAURL
+
 module.exports = {
   networks: {
     development: {
@@ -6,7 +10,7 @@ module.exports = {
      network_id: "*",
     },
     ropsten: {
-    provider: () => new HDWalletProvider(mnemonic, `https://ropsten.infura.io/v3/YOUR-PROJECT-ID`),
+    provider: () => new HDWalletProvider(mnemonic, infuraUrl),
     network_id: 3,
     gas: 5500000,
     confirmations: 2,

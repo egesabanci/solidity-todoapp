@@ -17,5 +17,9 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/egesabanci/solidity-todoapp/issues"
+  },
+  "dependencies": {
+    "@truffle/hdwallet-provider": "^2.0.0",
+    "dotenv": "^14.2.0"
   }
 }
