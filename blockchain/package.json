@@ -1,0 +1,21 @@
+{
+  "name": "solidity-todoapp",
+  "version": "1.0.0",
+  "description": "Really simple to-do application with Ethereum Blockchain, Truffle and React",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/egesabanci/solidity-todoapp.git"
+  },
+  "keywords": [
+    "Blockchain",
+    "Solidity",
+    "Ethereum",
+    "TodoApp",
+    "React"
+  ],
+  "author": "Ege Sabanci egesabanci@outlook.com.tr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/egesabanci/solidity-todoapp/issues"
+  }
+}
