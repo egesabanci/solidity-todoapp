@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import { useEffect, useState } from "react"
+import {useEffect, useState} from "react"
 import {ethers} from "ethers"
 import {GridLoader} from "react-spinners"
 
@@ -43,7 +43,7 @@ const MainContainer = styled.div`
   & > * {
     color: white;
   }
-  `
+`
 
 const Row = styled.div`
   width: ${props => props.width ? props.width : "100%"}
@@ -74,6 +74,11 @@ const App = () => {
     setAccount(accounts[0])
   }
 
+  const handleAddTodo = async () => {
+    let response = await contract.functions.addTodo(todoContent)
+    console.log(response)
+  }
+
   window.ethereum.on("accountsChanged", async (changedAccount) => {
     setAccount(changedAccount[0])
     setLoading(true)
@@ -81,10 +86,11 @@ const App = () => {
 
   window.ethereum.on("chainChanged", (chain) => {
     setChainID(chain)
+    setLoading(true)
   })
 
-  window.ethereum.on("disconnect", () => setAccount(undefined))
-  
+  window.ethereum.on("disconnect", () => {setAccount(undefined)})
+
   useEffect(() => {
     const updateChainID = async () => {
       let chainId = await window.ethereum.request({method: "eth_chainId"})
@@ -104,7 +110,7 @@ const App = () => {
     }
 
     initialCall()
-  }, [account])
+  }, [account, chainID])
 
   return (
     <AppContainer className="App">
@@ -132,29 +138,34 @@ const App = () => {
           <TodoListContainer>
             {chainID === "0x3"
               ? <h6 style = {{color: "#96CEB4"}}>Connected to Ropsten Testnet</h6>
-              : <h6 style = {{color: "#FF6464"}}>Please connect to Ropsten Testnet</h6>
+              : <h6 style = {{color: "#FF6464"}}>Please move to Ropsten Testnet</h6>
             } 
             <InputBarContainer>
               <InputBar
                 onChange = {(e) => setTodoContent(e.target.value)}
-                placeholder = "Add your to-do"
-                width = {"70%"} />
+                placeholder = {chainID === "0x3" ? (account ? "Add your to-do" : "Please connect your wallet") : "Move to Ropsten Testnet"}
+                width = {"70%"}
+                disabled = {chainID !== "0x3" || !account} />
               <Button
                 disable = {todoContent === ""}
                 size = {"0.85rem"}
                 header = {"Add to-do"}
                 icon = {<MdAddCircle />} 
-                width = {"25%"} />
+                width = {"25%"}
+                function = {handleAddTodo} />
             </InputBarContainer>
             <TodoListSection>
-              {loading
-              ? (account
-                  ? <CenteredDiv><GridLoader color = {theme.lightDark} /></CenteredDiv>
-                  : <CenteredDiv><h5>Connect your wallet <br /> Your todos will show up here</h5></CenteredDiv>
-                )
-              : (todos.length === 0 && !loading && account
-                  ? <CenteredDiv><h5>User does not have any todos</h5></CenteredDiv>
-                  : todos.map((content, index) => <Todo content = {content} key = {index} />))
+              {chainID === "0x3"
+                ? (loading
+                  ? (account
+                      ? <CenteredDiv><GridLoader color = {theme.lightDark} /></CenteredDiv>
+                      : <CenteredDiv><h5>Connect your wallet <br /> Your todos will show up here</h5></CenteredDiv>
+                    )
+                  : (todos.length === 0 && !loading && account && chainID === "0x3"
+                      ? <CenteredDiv><h5>User does not have any todos</h5></CenteredDiv>
+                      : todos.map((content, index) => <Todo content = {content} key = {index} />))
+                  )
+                : <CenteredDiv><h5>Please move to Ropsten Testnet</h5></CenteredDiv>
               }
             </TodoListSection>
           </TodoListContainer>
