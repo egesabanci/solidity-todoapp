@@ -1,4 +1,8 @@
-{
+export const todoContractAddress = {
+  "address": "0xbbCB9BB0c685c97Db003856C3D167DbD0505782b"
+}
+
+export const todoContract = {
   "contractName": "Todo",
   "abi": [
     {

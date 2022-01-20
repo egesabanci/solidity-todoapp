@@ -1,10 +1,16 @@
-import { useEffect, useState } from "react"
 import styled from "styled-components"
+import { useEffect, useState } from "react"
+import {ethers} from "ethers"
+import {GridLoader} from "react-spinners"
+
 import {MdAddCircle} from "react-icons/md"
 import {FaWallet} from "react-icons/fa"
 import {AiOutlineWarning} from "react-icons/ai"
 
+import {todoContractAddress, todoContract} from "./contract/contract"
+
 import theme from "./theme"
+import envConfig from "./config.env.json"
 import {Header} from "./components/TopHeader"
 import Button from "./components/Button"
 import Todo from "./components/Todo"
@@ -14,6 +20,7 @@ import {
   InputBarContainer,
   InputBar,
   TodoListSection,
+  CenteredDiv
 } from "./components/TodoElements"
 
 const AppContainer = styled.div`
@@ -44,9 +51,17 @@ const Row = styled.div`
 `
 
 const App = () => {
+  const provider = new ethers.providers.JsonRpcProvider(envConfig.providerUrl)
+  const contract = new ethers.Contract(
+    ethers.utils.getAddress(todoContractAddress.address),
+    todoContract.abi,
+    provider
+  )
+  
+  const [loading, setLoading] = useState(true)
   const [todos, setTodos] = useState([])
   const [todoContent, setTodoContent] = useState("")
-
+  
   const [account, setAccount] = useState(undefined)
   const [chainID, setChainID] = useState(undefined)
 
@@ -61,21 +76,42 @@ const App = () => {
 
   window.ethereum.on("accountsChanged", async (changedAccount) => {
     setAccount(changedAccount[0])
+    setLoading(true)
+  })
+
+  window.ethereum.on("chainChanged", (chain) => {
+    setChainID(chain)
   })
 
   window.ethereum.on("disconnect", () => setAccount(undefined))
+  
+  useEffect(() => {
+    const updateChainID = async () => {
+      let chainId = await window.ethereum.request({method: "eth_chainId"})
+      setChainID(chainId)
+    }
 
-  useEffect(async () => {
-    let chainId = await window.ethereum.request({method: "eth_chainId"})
-    setChainID(chainId)
+    updateChainID()
   }, [])
+
+  useEffect(() => {
+    const initialCall = async () => {
+      if (account) {
+        let allTodos = await contract.functions.getAllTodos(ethers.utils.getAddress(account))
+        setTodos(allTodos[0])
+        setLoading(false)
+      }
+    }
+
+    initialCall()
+  }, [account])
 
   return (
     <AppContainer className="App">
       <MainContainer>
         <Row>
           <Header>
-            <h1>Ethereum To-do App</h1>
+            <h1>Ethereum To-do dApp</h1>
             {account ?
               <Button disabled size = {"0.7rem"}
                 header = {trimAccountString(account)}
@@ -94,6 +130,10 @@ const App = () => {
         </Row>
         <Row>
           <TodoListContainer>
+            {chainID === "0x3"
+              ? <h6 style = {{color: "#96CEB4"}}>Connected to Ropsten Testnet</h6>
+              : <h6 style = {{color: "#FF6464"}}>Please connect to Ropsten Testnet</h6>
+            } 
             <InputBarContainer>
               <InputBar
                 onChange = {(e) => setTodoContent(e.target.value)}
@@ -107,7 +147,15 @@ const App = () => {
                 width = {"25%"} />
             </InputBarContainer>
             <TodoListSection>
-              {todos.map((content, index) => <Todo content = {content} key = {index} />)}
+              {loading
+              ? (account
+                  ? <CenteredDiv><GridLoader color = {theme.lightDark} /></CenteredDiv>
+                  : <CenteredDiv><h5>Connect your wallet <br /> Your todos will show up here</h5></CenteredDiv>
+                )
+              : (todos.length === 0 && !loading && account
+                  ? <CenteredDiv><h5>User does not have any todos</h5></CenteredDiv>
+                  : todos.map((content, index) => <Todo content = {content} key = {index} />))
+              }
             </TodoListSection>
           </TodoListContainer>
         </Row>
