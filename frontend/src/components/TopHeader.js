@@ -1,6 +1,6 @@
 import styled from "styled-components"
 
-export const Header = styled.div`
+const Header = styled.div`
   width: 100%;
   height: auto;
   display: flex;
@@ -11,3 +11,5 @@ export const Header = styled.div`
     font-size: 1.3rem;
   }
 `
+
+export default Header

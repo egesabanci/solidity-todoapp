@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {useDebugValue, useEffect, useState} from "react"
+import {useEffect, useState} from "react"
 import {ethers} from "ethers"
 import {GridLoader} from "react-spinners"
 
@@ -11,7 +11,7 @@ import {todoContractAddress, todoContract} from "./contract/contract"
 
 import theme from "./theme"
 import envConfig from "./config.env.json"
-import {Header} from "./components/TopHeader"
+import Header from "./components/TopHeader"
 import Button from "./components/Button"
 import Todo from "./components/Todo"
 
