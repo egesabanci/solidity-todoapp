@@ -1,5 +1,5 @@
 import styled from "styled-components"
-import {useEffect, useState} from "react"
+import {useDebugValue, useEffect, useState} from "react"
 import {ethers} from "ethers"
 import {GridLoader} from "react-spinners"
 
@@ -64,6 +64,7 @@ const App = () => {
   
   const [account, setAccount] = useState(undefined)
   const [chainID, setChainID] = useState(undefined)
+  const [txStatus, setTxStatus] = useState(undefined)
 
   const trimAccountString = (accountString) => {
     return accountString.slice(0, 10) + "..." + accountString.slice(32)
@@ -75,8 +76,21 @@ const App = () => {
   }
 
   const handleAddTodo = async () => {
-    let response = await contract.functions.addTodo(todoContent)
-    console.log(response)
+    let transaction = await contract.populateTransaction.addTodo(account, todoContent)
+    transaction.from = account
+    transaction.chainId = chainID
+    
+    let transactionHash = await window.ethereum.request({
+      method: "eth_sendTransaction",
+      params: [transaction]
+    })
+
+    setTodoContent("")
+    setTxStatus("pending")
+
+    provider.once(transactionHash, (tx) => {
+      setTxStatus(tx.status)
+    })
   }
 
   window.ethereum.on("accountsChanged", async (changedAccount) => {
@@ -92,6 +106,25 @@ const App = () => {
   window.ethereum.on("disconnect", () => {setAccount(undefined)})
 
   useEffect(() => {
+    const updateTodosWithTransactionStatus = async () => {
+      let allTodos = await contract.functions.getAllTodos(ethers.utils.getAddress(account))
+      setTodos(allTodos[0])
+    }
+
+    updateTodosWithTransactionStatus()
+  }, [txStatus])
+
+  useEffect(() => {
+    const changeTxStatusToInitial = () => {
+      if (txStatus !== "pending") {
+        setTxStatus(undefined)
+      }
+    }
+
+    changeTxStatusToInitial()
+  }, [todos])
+
+  useEffect(async () => {
     const updateChainID = async () => {
       let chainId = await window.ethereum.request({method: "eth_chainId"})
       setChainID(chainId)
@@ -143,6 +176,7 @@ const App = () => {
             <InputBarContainer>
               <InputBar
                 onChange = {(e) => setTodoContent(e.target.value)}
+                value = {todoContent}
                 placeholder = {chainID === "0x3" ? (account ? "Add your to-do" : "Please connect your wallet") : "Move to Ropsten Testnet"}
                 width = {"70%"}
                 disabled = {chainID !== "0x3" || !account} />
@@ -163,12 +197,24 @@ const App = () => {
                     )
                   : (todos.length === 0 && !loading && account && chainID === "0x3"
                       ? <CenteredDiv><h5>User does not have any todos</h5></CenteredDiv>
-                      : todos.map((content, index) => <Todo content = {content} key = {index} />))
+                      : [...todos].reverse().map((content, index) => <Todo content = {<span>{index + 1 + " - " + content.todoContent}</span>} key = {index} />))
                   )
                 : <CenteredDiv><h5>Please move to Ropsten Testnet</h5></CenteredDiv>
               }
             </TodoListSection>
           </TodoListContainer>
+          {account &&
+            (!txStatus
+              ? <h6 style = {{color: "gray"}}>There is no pending transactions</h6>
+              : (txStatus === "pending"
+                ? <h6 style = {{color: "#FFE162"}}>Transaction processing...</h6>
+                : (txStatus === 1
+                    ? <h6 style = {{color: "#96CEB4"}}>Transaction successfully mined!</h6>
+                    : <h6 style = {{color: "#FF6464"}}>Transaction failed!</h6>
+                )
+              )
+            )
+          }
         </Row>
       </MainContainer>
     </AppContainer>

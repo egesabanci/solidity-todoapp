@@ -19,12 +19,9 @@ contract Todo {
     return users[_address].todos;
   }
 
-  function getTodo(address _address, uint256 _todoID) view public returns (TodoItem memory) {
-    return users[_address].todos[_todoID];
-  }
-
   function addTodo(address _address, string memory _todoContent) public {
     TodoItem memory newTodo = TodoItem(todoCount, _todoContent);
     users[_address].todos.push(newTodo);
+    todoCount++;
   }
 }
