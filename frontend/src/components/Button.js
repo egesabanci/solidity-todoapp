@@ -33,6 +33,7 @@ const ButtonSpan = styled.span`
 const Button = (props) => {
   return (
     <ButtonComponent
+      style = {props.style}
       width = {props.width}
       size = {props.size}
       disable = {props.disable}
