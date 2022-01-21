@@ -66,14 +66,17 @@ const App = () => {
   const [chainID, setChainID] = useState(undefined)
   const [txStatus, setTxStatus] = useState(undefined)
 
+
   const trimAccountString = (accountString) => {
     return accountString.slice(0, 10) + "..." + accountString.slice(32)
   }
+
 
   const handleAccountConnection = async () => {
     let accounts = await window.ethereum.request({method: "eth_requestAccounts"})
     setAccount(accounts[0])
   }
+
 
   const handleAddTodo = async () => {
     let transaction = await contract.populateTransaction.addTodo(account, todoContent)
@@ -93,17 +96,23 @@ const App = () => {
     })
   }
 
+
   window.ethereum.on("accountsChanged", async (changedAccount) => {
     setAccount(changedAccount[0])
     setLoading(true)
   })
+
 
   window.ethereum.on("chainChanged", (chain) => {
     setChainID(chain)
     setLoading(true)
   })
 
-  window.ethereum.on("disconnect", () => {setAccount(undefined)})
+
+  window.ethereum.on("disconnect", () => {
+    setAccount(undefined)
+  })
+
 
   useEffect(() => {
     const updateTodosWithTransactionStatus = async () => {
@@ -113,6 +122,7 @@ const App = () => {
 
     updateTodosWithTransactionStatus()
   }, [txStatus])
+
 
   useEffect(() => {
     const changeTxStatusToInitial = () => {
@@ -124,6 +134,7 @@ const App = () => {
     changeTxStatusToInitial()
   }, [todos])
 
+
   useEffect(async () => {
     const updateChainID = async () => {
       let chainId = await window.ethereum.request({method: "eth_chainId"})
@@ -132,6 +143,7 @@ const App = () => {
 
     updateChainID()
   }, [])
+
 
   useEffect(() => {
     const initialCall = async () => {
@@ -144,6 +156,7 @@ const App = () => {
 
     initialCall()
   }, [account, chainID])
+
 
   return (
     <AppContainer className="App">

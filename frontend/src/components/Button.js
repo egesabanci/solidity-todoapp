@@ -12,7 +12,7 @@ const ButtonComponent = styled.button`
   transition: 0.2s ease;
   
   & > span {
-    font-size: ${props => props.size ? props.size : "1rem"}
+    font-size: ${props => props.size ? props.size : "1rem"};
   }
 
   &:hover {

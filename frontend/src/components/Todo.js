@@ -11,7 +11,7 @@ const TodoItem = styled.div`
   
   & > span {
     color: white;
-    font-size: ${props => props.fontSize ? props.fontSize : "0.7rem"}
+    font-size: ${props => props.fontSize ? props.fontSize : "0.7rem"};
   }
 
   &:first-child {
