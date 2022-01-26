@@ -1,11 +1,11 @@
 {
   "files": {
-    "main.js": "/solidity-todoapp/static/js/main.186920cf.js",
+    "main.js": "/solidity-todoapp/static/js/main.d7937031.js",
     "static/media/404.svg": "/solidity-todoapp/static/media/404.0246cd47dd455c608c5bed9010328850.svg",
     "index.html": "/solidity-todoapp/index.html",
-    "main.186920cf.js.map": "/solidity-todoapp/static/js/main.186920cf.js.map"
+    "main.d7937031.js.map": "/solidity-todoapp/static/js/main.d7937031.js.map"
   },
   "entrypoints": [
-    "static/js/main.186920cf.js"
+    "static/js/main.d7937031.js"
   ]
 }
