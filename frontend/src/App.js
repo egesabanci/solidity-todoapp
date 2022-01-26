@@ -9,13 +9,15 @@ import Application from "./pages/Application"
 import LandingPage from "./pages/LandingPage"
 import NotFound from "./pages/NotFound"
 
+const routeExtension = "solidity-todoapp"
+
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route exact path = "/" element = {<LandingPage />} />
-        <Route path = "/app" element = {<Application />} />
-        <Route path = "*" element = {<NotFound />} />
+        <Route exact path = {routeExtension + "/"} element = {<LandingPage />} />
+        <Route path = {routeExtension + "/app"} element = {<Application />} />
+        <Route path = {routeExtension + "/" + "*"} element = {<NotFound />} />
       </Routes>
     </Router>
   )
