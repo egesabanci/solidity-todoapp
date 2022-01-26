@@ -23,8 +23,9 @@ Run the local dev-server
 ```
 
 # Application Overview
-![Application Overview]()
+![Application Overview](https://raw.githubusercontent.com/egesabanci/solidity-todoapp/master/assets/application-overview.png)
 
+![Application Overview - With Connected Wallet](https://raw.githubusercontent.com/egesabanci/solidity-todoapp/master/assets/with-connected-wallet.png)
 # Technical Blog Post
 On the way...
 
