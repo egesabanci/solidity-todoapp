@@ -13,7 +13,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path = "/" element = {<LandingPage />} />
+        <Route exact path = "/" element = {<LandingPage />} />
         <Route path = "/app" element = {<Application />} />
         <Route path = "*" element = {<NotFound />} />
       </Routes>
