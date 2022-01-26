@@ -12,7 +12,7 @@ const LandingPage = () => {
 
   useEffect(() => {
     const getStars = async () => {
-      const repoStarsUrl = "https://api.github.com/repos/egesabanci/neural-style-transfer"
+      const repoStarsUrl = "https://api.github.com/repos/egesabanci/solidity-todoapp"
       let currentStars = await axios.get(repoStarsUrl)
       setStars(currentStars.data.stargazers_count)
     }
@@ -44,7 +44,7 @@ const LandingPage = () => {
                 icon = {<AiOutlineGithub />} 
               />
             </a>
-            <Link to = "/app" style = {{width: "40%"}}>
+            <Link to = "/solidity-todoapp/app" style = {{width: "40%"}}>
               <Button
                 style = {{border: "1px solid white"}}
                 header = {"Go to application"}

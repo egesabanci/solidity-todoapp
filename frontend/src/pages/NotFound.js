@@ -17,7 +17,7 @@ const NotFound = () => {
         <ContentContainer>
           <h1>404 Not Found</h1>             
           <NotFoundImage src = {NotFound404} />
-          <Link to = "/">
+          <Link to = "/solidity-todoapp">
             <Button header = {"Go back"} width = {"115%"} icon = {<BiArrowBack />} />  
           </Link>
         </ContentContainer>

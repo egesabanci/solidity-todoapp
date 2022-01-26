@@ -15,9 +15,9 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route exact path = {routeExtension + "/"} element = {<LandingPage />} />
-        <Route path = {routeExtension + "/app"} element = {<Application />} />
-        <Route path = {routeExtension + "/" + "*"} element = {<NotFound />} />
+        <Route exact path = {"/" + routeExtension} element = {<LandingPage />} />
+        <Route path = {"/" + routeExtension + "/app"} element = {<Application />} />
+        <Route path = {"/" + routeExtension + "/*"} element = {<NotFound />} />
       </Routes>
     </Router>
   )
